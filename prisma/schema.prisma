@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WatchStatus {
+  active
+  paused
+  archived
+}
+
+enum SignalType {
+  funding
+  hiring
+  product
+  pricing
+  leadership
+  news
+}
+
+model Watch {
+  id             String       @id @default(cuid())
+  userId         String
+  companyUrl     String
+  companyName    String
+  watchFrequency String
+  status         WatchStatus  @default(active)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  lastCheckedAt  DateTime?
+  signals        WatchSignal[]
+  snapshots      Snapshot[]
+}
+
+model WatchSignal {
+  id         String     @id @default(cuid())
+  watchId    String
+  signalType SignalType
+  enabled    Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  watch      Watch      @relation(fields: [watchId], references: [id], onDelete: Cascade)
+
+  @@unique([watchId, signalType])
+}
+
+model Snapshot {
+  id          String   @id @default(cuid())
+  watchId     String
+  capturedAt  DateTime @default(now())
+  isBaseline  Boolean  @default(false)
+  data        Json
+  changes     Json?
+  changeCount Int      @default(0)
+  watch       Watch    @relation(fields: [watchId], references: [id], onDelete: Cascade)
+
+  @@index([watchId, capturedAt(sort: Desc)])
+}
