@@ -1,31 +1,53 @@
-Vaaya Signals is a V1 company watch product that tracks a company over time and surfaces only meaningful changes:
+# Vaaya Signals
+
+Watch a company over time and only look at what actually changed.
+
+You add a URL (Stripe, Adobe, whoever you care about). The first run saves the current picture: product news, hiring, pricing, leadership, and so on. Later runs compare against that picture and rank the few changes worth acting on — what moved, why it matters, and a next step.
+
+## Setup
+
+You need Node.js, a Postgres database (Neon works), and a Vaaya API key.
 
 ```bash
 npm install
+```
+
+Copy `.env.example` to `.env` and fill in:
+
+- `DATABASE_URL` — Postgres connection string
+- `VAAYA_API_KEY` — your Vaaya key
+- `VAAYA_BASE_URL` — usually `https://vaaya.ai`
+- `RESEARCH_PROVIDER_MODE` — `vaaya` for live data, or `demo` if you just want fixture data
+
+Then:
+
+```bash
 npm run db:push
 npm run dev
 ```
 
 Open [http://localhost:3000/watches](http://localhost:3000/watches).
 
-V1 flow:
+## How a watch works
 
-- Add a company URL and choose the signals to watch
-- First run creates a baseline snapshot
-- Manual reruns create a fresh snapshot, compare it with the previous one, and surface the top 3 meaningful changes
-- Each change includes what changed, why it matters, and what you could do next
+1. Create a watch with a company URL and the signal types you care about (funding, hiring, product, pricing, leadership, news).
+2. The first run stores a snapshot. That is the current state, not a “change.”
+3. Click **Run now** later. The app fetches a fresh snapshot, diffs it with the last one, and shows the top meaningful changes.
+4. Open the company page to see the live signals, the ranked diffs, run history, and sources.
 
-Core endpoints:
+## API
 
-- `POST /api/watches`
-- `GET /api/watches`
-- `GET /api/watches/:id`
-- `DELETE /api/watches/:id`
-- `POST /api/watches/:id/run`
-- `GET /api/watches/:id/changes`
-- `GET /api/watches/:id/snapshots`
+| Method | Path | What it does |
+| --- | --- | --- |
+| `GET` | `/api/watches` | List watches |
+| `POST` | `/api/watches` | Create a watch |
+| `GET` | `/api/watches/:id` | Get one watch |
+| `DELETE` | `/api/watches/:id` | Delete a watch |
+| `POST` | `/api/watches/:id/run` | Run a watch now |
+| `GET` | `/api/watches/:id/changes` | Latest ranked changes |
+| `GET` | `/api/watches/:id/snapshots` | Snapshot history |
 
-Useful scripts:
+## Scripts
 
 ```bash
 npm run lint
@@ -33,8 +55,3 @@ npm run typecheck
 npm test
 npm run build
 ```
-
-Provider modes:
-
-- `vaaya` is the intended runtime mode for this project. If `VAAYA_API_KEY` is present, the app uses Vaaya's real HTTP API by default.
-- `demo` still exists as an explicit fallback mode, but the primary product path is real Vaaya-backed data collection.
