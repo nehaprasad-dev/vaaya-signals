@@ -2,7 +2,7 @@
 
 Watch a company over time and only look at what actually changed.
 
-You add a URL (Stripe, Adobe, whoever you care about). The first run saves the current picture: product news, hiring, pricing, leadership, and so on. Later runs compare against that picture and rank the few changes worth acting on — what moved, why it matters, and a next step.
+You add a URL (Stripe, Adobe, whoever you care about). The first run saves the current picture: product news, hiring, pricing, leadership, and so on. Later runs compare against that picture and rank the few changes worth acting on - what moved, why it matters, and a next step.
 
 ## Setup
 
