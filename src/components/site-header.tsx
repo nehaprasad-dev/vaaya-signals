@@ -25,15 +25,9 @@ export function SiteHeader() {
           <Link href="/watches/new" className="nav-link">
             Create
           </Link>
-          <a href="#watches-list" className="nav-link">
-            Workspace
-          </a>
         </nav>
 
         <div className="header-actions">
-          <Link href="/watches" className="text-link">
-            Open app
-          </Link>
           <Link href="/watches/new" className="primary-button">
             Start watch
           </Link>
